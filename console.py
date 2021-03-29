@@ -127,8 +127,20 @@ class HBNBCommand(cmd.Cmd):
             kv = param.split("=")
             k = kv[0]
             v = kv[1]
-            new = v.replace("_", " ").replace('\"', '')
-        setattr(obj, k, new)
+            if hasattr(obj, k) is True:
+                try:
+                    if v[0] == '"' and v[-1] == '"':
+                        new = v[1:-1].replace("_", " ").replace('"', '\"')
+                    elif '.' in v:
+                        new = float(v)
+                    else:
+                        new = int(v)
+                    if isinstance(type(new), type(getattr(obj, k))):
+                        setattr(obj, k, new)
+                except:
+                    pass
+            else:
+                pass
         obj.save()
         print(obj.id)
 
