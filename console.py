@@ -135,7 +135,7 @@ class HBNBCommand(cmd.Cmd):
                         new = float(v)
                     else:
                         new = int(v)
-                    if isinstance(type(new), type(getattr(obj, k))):
+                    if isinstance(new, type(getattr(obj, k))):
                         setattr(obj, k, new)
                 except:
                     pass
