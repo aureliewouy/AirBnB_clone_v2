@@ -4,6 +4,8 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from models.base_model import Base
 from models.base_model import BaseModel
+from models.city import City
+from models.state import State
 from os import getenv
 
 
@@ -28,11 +30,14 @@ class DBStorage:
 
     def all(self, cls=None):
         """ Query on the current database session all objects """
+        l = []
         if cls is not None:
-            l = self.__session.query(cls).all()
+            r = self.__session.query(cls).all()
         else:
-            l = self.__session.all()
-        print(l)
+            r = self.__session.all()
+        for obj in r:
+            l.append(obj.__str__())
+        return(l)
 
     def new(self, obj):
         """ add the object to the current database session """
@@ -44,7 +49,5 @@ class DBStorage:
 
     def reload(self):
         """ create all tables in the database"""
-        from models.city import City
-        from models.state import State
         Base.metadata.create_all(self.__engine)
         self.__session = sessionmaker(bind=self.__engine)()
