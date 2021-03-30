@@ -1,9 +1,11 @@
 #!/usr/bin/python3
 """ New engine """
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, scoped_session
 from models.base_model import Base
 from models.base_model import BaseModel
+from models.city import City
+from models.state import State
 from os import getenv
 
 
@@ -24,15 +26,18 @@ class DBStorage:
                                       format(user, passwd, host, db),
                                       pool_pre_ping=True)
         if getenv('HBNB_ENV') == 'test':
-            Base.metadata.drop_all(bind=engine)
+            Base.metadata.drop_all(bind=self.__engine)
 
     def all(self, cls=None):
         """ Query on the current database session all objects """
+        l = []
         if cls is not None:
-            l = self.__session.query(cls).all()
+            r = self.__session.query(cls).all()
         else:
-            l = self.__session.all()
-        print(l)
+            r = self.__session.all()
+        for obj in r:
+            l.append(obj.__str__())
+        return(l)
 
     def new(self, obj):
         """ add the object to the current database session """
@@ -42,9 +47,14 @@ class DBStorage:
         """ commit all changes of the current database session """
         self.__session.commit()
 
+    def delete(self, obj=None):
+        """ Delete from the current database session obj if not None"""
+        if obj != None:
+            self.__session.delete(obj)
+
     def reload(self):
         """ create all tables in the database"""
-        from models.city import City
-        from models.state import State
         Base.metadata.create_all(self.__engine)
-        self.__session = sessionmaker(bind=self.__engine)()
+        session_fact = sessionmaker(bind=self.__engine, expire_on_commit=False)
+        Session = scoped_session(session_fact)
+        self.__session = Session()
