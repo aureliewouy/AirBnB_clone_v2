@@ -10,6 +10,7 @@ from models.state import State
 from models.city import City
 from models.amenity import Amenity
 from models.review import Review
+import sqlalchemy
 
 
 class HBNBCommand(cmd.Cmd):
@@ -135,8 +136,8 @@ class HBNBCommand(cmd.Cmd):
                         new = float(v)
                     else:
                         new = int(v)
-                    if isinstance(new, type(getattr(obj, k))):
-                        setattr(obj, k, new)
+#                    if isinstance(new, type(getattr(obj, k))):
+                    setattr(obj, k, new)
                 except:
                     pass
             else:
@@ -224,9 +225,13 @@ class HBNBCommand(cmd.Cmd):
             if args not in HBNBCommand.classes:
                 print("** class doesn't exist **")
                 return
+            print(args)
+            print(storage.all(args))
+            """
             for k, v in storage._FileStorage__objects.items():
                 if k.split('.')[0] == args:
                     print_list.append(str(v))
+                    """
         else:
             for k, v in storage._FileStorage__objects.items():
                 print_list.append(str(v))
