@@ -222,14 +222,13 @@ class HBNBCommand(cmd.Cmd):
                 print("** class doesn't exist **")
                 return
             print_list = storage.all(eval(args))
-            """
-            for k, v in storage._FileStorage__objects.items():
-                if k.split('.')[0] == args:
-                    print_list.append(str(v))
-                    """
         else:
-            for k, v in storage._FileStorage__objects.items():
-                print_list.append(str(v))
+                print_list.append(storage.all(User))
+                print_list.append(storage.all(Place))
+                print_list.append(storage.all(State))
+                print_list.append(storage.all(Amenity))
+                print_list.append(storage.all(Review))
+                print_list.append(storage.all(City))
 
         print(print_list)
 

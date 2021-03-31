@@ -8,6 +8,8 @@ from models.city import City
 from models.state import State
 from models.user import User
 from models.place import Place
+from models.amenity import Amenity
+
 from os import getenv
 
 
@@ -36,7 +38,16 @@ class DBStorage:
         if cls is not None:
             r = self.__session.query(cls).all()
         else:
-            r = self.__session.all()
+
+            pass
+            """
+            print(self.__engine.table_names())
+            for e in Base.metadata.tables.keys():
+                r = self.__session.query(Base.metadata.tables[e]).all()
+                for j in r:
+                    print(j)
+                    print(type(j))
+                    """
         for obj in r:
             l.append(obj.__str__())
         return(l)
