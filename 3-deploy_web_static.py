@@ -5,6 +5,7 @@ from datetime import datetime
 import os.path
 env.hosts = ['34.75.49.102', '35.196.238.0']
 env.user = 'ubuntu'
+env.password = '~/.ssh/id_rsa'
 
 
 def do_pack():
@@ -34,7 +35,7 @@ def do_deploy(archive_path):
         """ filename = web_static_20170315003959.tgz """
         tmp = '/tmp/' + filename
         """ Upload tmp directory of the web server """
-        put(archive_path, filename)
+        put(archive_path, tmp)
         file_no_ext = filename.split(".")[0]
         folder = '/data/web_static/releases/' + file_no_ext + '/'
         run("sudo mkdir -p {}".format(folder))
