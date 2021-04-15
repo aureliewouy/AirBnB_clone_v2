@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 """ Fabric script that  that distributes an archive to your web servers """
 from fabric.api import *
-from time import strftime
+from datetime import datetime
 import os.path
 env.hosts = ['34.75.49.102', '35.196.238.0']
 env.user = 'ubuntu'
@@ -11,13 +11,15 @@ def do_pack():
     """
     Generates a .tgz archive
     """
-    local("mkdir -p versions")
-    timef = strftime("%Y%m%d%H%M%S")
-    pack = local("tar -cvzf versions/web_static_{}.tgz web_static/"
-                 .format(timef))
+    if not os.path.isdir("versions"):
+        local("mkdir -p versions")
+    timef = datetime.strftime(datetime.now(), "%Y%m%d%H%M%S")
+    filename = "versions/web_static_{}.tgz".format(timef)
+    pack = local("tar -cvzf {} web_static"
+                 .format(filename))
     if pack.failed:
         return None
-    return pack
+    return filename
 
 
 def do_deploy(archive_path):
@@ -32,7 +34,7 @@ def do_deploy(archive_path):
         """ filename = web_static_20170315003959.tgz """
         tmp = '/tmp/' + filename
         """ Upload tmp directory of the web server """
-        put(archive_path, tmp)
+        put(archive_path, filename)
         file_no_ext = filename.split(".")[0]
         folder = '/data/web_static/releases/' + file_no_ext + '/'
         run("sudo mkdir -p {}".format(folder))
@@ -42,7 +44,7 @@ def do_deploy(archive_path):
          /tmp/web_static_20170315003959.tgz """
         run("sudo rm {}".format(tmp))
         run("sudo mv {}web_static/* {}".format(folder, folder))
-        run("sudo rm -rf {}/web_static".format(folder))
+        run("sudo rm -rf {}/web_static/".format(folder))
         symb = '/data/web_static/current'
         """Delete the symbolic link /data/web_static/current """
         run("sudo rm -rf {}".format(symb))
