@@ -60,4 +60,5 @@ def deploy():
     pack = do_pack()
     if pack is None:
         return False
-    return (do_deploy(pack))
+    deploy = do_deploy(pack)
+    return deploy
