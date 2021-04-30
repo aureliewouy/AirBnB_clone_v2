@@ -34,23 +34,19 @@ class DBStorage:
 
     def all(self, cls=None):
         """ Query on the current database session all objects """
-        l = []
+        new_dict = {}
         if cls is not None:
             r = self.__session.query(cls).all()
+            for obj in r:
+                k = obj.__class__.__name__ + '.' + obj.id
+                new_dict[k] = obj
         else:
-
-            pass
-            """
-            print(self.__engine.table_names())
-            for e in Base.metadata.tables.keys():
-                r = self.__session.query(Base.metadata.tables[e]).all()
-                for j in r:
-                    print(j)
-                    print(type(j))
-                    """
-        for obj in r:
-            l.append(obj.__str__())
-        return(l)
+            for c in self.__classes:
+                cls = self.__session.query(self.__classes[c]).all()
+                for cl in cls:
+                    k = cl.__class__.__name__ + '.' + cl.id
+                    new_dict[k] = cl
+        return(new_dict)
 
     def new(self, obj):
         """ add the object to the current database session """
