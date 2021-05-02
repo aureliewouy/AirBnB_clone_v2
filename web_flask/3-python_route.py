@@ -24,8 +24,8 @@ def c_text(text):
 @app.route("/python/<text>", strict_slashes=False)
 def py_text(text):
     text = text.replace('_', ' ')
-    return 'Python  %s' % text
+    return 'Python %s' % text
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host='0.0.0.0', debug=True)
