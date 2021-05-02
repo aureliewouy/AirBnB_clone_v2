@@ -24,12 +24,12 @@ def c_text(text):
 @app.route("/python/<text>", strict_slashes=False)
 def py_text(text):
     text = text.replace('_', ' ')
-    return 'Python  %s' % text
+    return 'Python %s' % text
 
 
 @app.route("/number/<int:n>", strict_slashes=False)
 def number(n):
-    return ' %s is a number' % n
+    return '%s is a number' % n
 
 
 if __name__ == "__main__":
