@@ -12,9 +12,11 @@ def cities_by_states():
     states = storage.all(State).values()
     return render_template('8-cities_by_states.html', states=states)
 
+
 @app.teardown_appcontext
 def teardown(self):
     storage.close()
+
 
 if __name__ == "__main__":
     app.run(debug=True)
